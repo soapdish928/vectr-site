@@ -1,0 +1,34 @@
+---
+import { Image } from 'astro:assets';
+import heatmap from '../assets/coverage-heatmap.png';
+import { steps } from '../data/site';
+import ScrollLink from './ScrollLink.astro';
+---
+<section id="approach" class="section section--centred section--navy">
+  <div class="container split" style="align-items: center">
+    <div class="stack" style="gap: 44px">
+      <div class="stack" style="gap: 28px">
+        <p class="eyebrow">How we work</p>
+        <h2 class="h2">Designed first. <em>Explained always.</em></h2>
+      </div>
+      <ol class="rows" style="list-style: none; margin: 0; padding: 0">
+        {steps.map((s, i) => (
+          <li class="row">
+            <span class="row__num">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <h3 class="row__title">{s.title}</h3>
+              <p class="row__text">{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="framed">
+      <figure class="heatmap">
+        <Image src={heatmap} alt="Wi-Fi coverage heatmap over a house floor plan, showing strong signal throughout" widths={[500, 862]} sizes="(min-width: 1000px) 560px, 100vw" />
+        <figcaption>A coverage plan, produced before anything is installed.</figcaption>
+      </figure>
+    </div>
+  </div>
+  <ScrollLink to="aftercare" label="Scroll to Experience and aftercare" />
+</section>

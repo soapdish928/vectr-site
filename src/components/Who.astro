@@ -1,0 +1,33 @@
+---
+import { Image } from 'astro:assets';
+import home from '../assets/home-cotswold.jpg';
+import camera from '../assets/camera-wall.jpg';
+import ScrollLink from './ScrollLink.astro';
+---
+<section id="who" class="section section--alt">
+  <div class="container stack" style="gap: 64px">
+    <div class="stack" style="gap: 28px; max-width: 760px">
+      <p class="eyebrow">Who we work with</p>
+      <h2 class="h2">For homes, workplaces <em>and everywhere between.</em></h2>
+    </div>
+    <div class="cards-2">
+      <article class="who-card">
+        <Image src={home} alt="A Cotswold stone house framed by climbing plants" widths={[600, 1000]} sizes="(min-width: 1000px) 600px, 100vw" style="object-position: center 45%" />
+        <div class="who-card__body">
+          <h3 class="who-card__title">Homes</h3>
+          <p class="who-card__text">Fast, reliable Wi-Fi in every room, security you can trust, and an installer who explains how it all works.</p>
+          <a class="link-underline" href="#contact">Talk to us about your home</a>
+        </div>
+      </article>
+      <article class="who-card">
+        <Image src={camera} alt="A white security camera on a pale rendered wall" widths={[600, 1000]} sizes="(min-width: 1000px) 600px, 100vw" />
+        <div class="who-card__body">
+          <h3 class="who-card__title">Business &amp; community</h3>
+          <p class="who-card__text">Offices, shops, village halls and venues — secure networks, guest Wi-Fi and CCTV, documented and supported.</p>
+          <a class="link-underline" href="#contact">Discuss a project</a>
+        </div>
+      </article>
+    </div>
+  </div>
+  <ScrollLink to="approach" label="Scroll to How we work" />
+</section>

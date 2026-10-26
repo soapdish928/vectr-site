@@ -1,0 +1,15 @@
+# Used by `npm run preview` (wrangler pages dev) and optional CLI deploys.
+# Production deploys happen automatically from GitHub via Cloudflare Pages.
+name = "vectr-site"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-10-01"
+
+[vars]
+CONTACT_TO = "info@vectr.uk"
+CONTACT_FROM = "Vectr website <website@vectr.uk>"
+SEND_CONFIRMATION = "true"
+
+# Secrets are NOT stored here. Set them in the Cloudflare dashboard
+# (Pages → vectr-site → Settings → Variables and secrets), or locally in .dev.vars:
+#   TURNSTILE_SECRET_KEY
+#   RESEND_API_KEY

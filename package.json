@@ -1,0 +1,25 @@
+{
+  "name": "vectr-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "vectr.uk — single-page site, built with Astro and hosted on Cloudflare Pages",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro build && wrangler pages dev dist",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.2.0",
+    "@fontsource/instrument-serif": "^5.2.0",
+    "astro": "^7.4.2",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "wrangler": "^4.152.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

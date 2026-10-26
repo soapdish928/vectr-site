@@ -1,0 +1,5 @@
+# Old Wix addresses → new site (keeps links and search rankings working)
+/book-online            /#contact   301
+/book-online/*          /#contact   301
+/privacy-policy         /privacy    301
+/terms-and-conditions   /           301

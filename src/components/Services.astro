@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import mediaWall from '../assets/media-wall.jpg';
+import { services } from '../data/site';
+import ScrollLink from './ScrollLink.astro';
+---
+<section id="services" class="section section--centred">
+  <div class="container split" style="align-items: start">
+    <div class="stack services__intro">
+      <p class="eyebrow">What we do</p>
+      <h2 class="h2">Connected, secure, <em>and looked after.</em></h2>
+      <p class="lead">
+        Complete solutions for connectivity, entertainment and peace of mind — a fresh design, or built carefully
+        around what you already have.
+      </p>
+      <Image
+        class="services__img"
+        src={mediaWall}
+        alt="A sitting room media wall with a recessed TV and fire set into slatted panelling"
+        widths={[600, 1000, 1400]}
+        sizes="(min-width: 1000px) 560px, 100vw"
+      />
+    </div>
+    <ol class="rows" style="list-style: none; margin: 0; padding: 0">
+      {services.map((s, i) => (
+        <li class="row">
+          <span class="row__num">{String(i + 1).padStart(2, '0')}</span>
+          <div>
+            <h3 class="row__title">{s.title}</h3>
+            <p class="row__text">{s.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+  <ScrollLink to="who" label="Scroll to Who we work with" />
+</section>

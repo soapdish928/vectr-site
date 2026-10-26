@@ -1,0 +1,168 @@
+---
+import { site, interests, timeSlots } from '../data/site';
+import ScrollLink from './ScrollLink.astro';
+
+// Public Turnstile site key (set PUBLIC_TURNSTILE_SITE_KEY in Cloudflare Pages).
+// Falls back to Cloudflare's always-pass test key for local development.
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+---
+<section id="contact" class="section">
+  <div class="container split" style="align-items: start">
+    <div class="stack" style="gap: 28px">
+      <p class="eyebrow">Contact</p>
+      <h2 class="h2 contact__h">Let's <em>talk.</em></h2>
+      <p class="lead">No hard sell. Tell us a little about the job, choose a day that suits you, and we'll call to talk it through.</p>
+      <dl class="details">
+        <div><dt>Telephone</dt><dd><a href={site.phoneHref}>{site.phoneIntl}</a></dd></div>
+        <div><dt>Email</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+        <div><dt>Hours</dt><dd>{site.hours}</dd></div>
+      </dl>
+    </div>
+
+    <div class="form-card">
+      <div class="sent" id="contact-sent" hidden>
+        <p class="eyebrow">Request received</p>
+        <p class="sent__title" id="contact-sent-text">Thank you — we'll call you soon.</p>
+        <p class="lead" style="font-size: 16px">A copy of your request is on its way to your inbox.</p>
+        <button type="button" class="btn btn--ghost" id="contact-again" style="align-self: flex-start">Send another</button>
+      </div>
+
+      <form class="form" id="contact-form" action="/api/contact" method="post" novalidate>
+        <div class="form__grid">
+          <div class="field"><label for="fn">First name</label><input id="fn" name="first_name" required autocomplete="given-name" maxlength="80" /></div>
+          <div class="field"><label for="ln">Last name</label><input id="ln" name="last_name" required autocomplete="family-name" maxlength="80" /></div>
+          <div class="field"><label for="em">Email</label><input id="em" name="email" type="email" required autocomplete="email" maxlength="160" /></div>
+          <div class="field"><label for="ph">Phone</label><input id="ph" name="phone" type="tel" required autocomplete="tel" maxlength="40" /></div>
+          <div class="field"><label for="pc">Postcode</label><input id="pc" name="postcode" autocomplete="postal-code" maxlength="12" /></div>
+          <div class="field">
+            <label for="sv">I'm interested in</label>
+            <select id="sv" name="service">
+              {interests.map((o) => <option value={o.value}>{o.label}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <fieldset class="when">
+          <legend>When should we call?</legend>
+          <div class="field">
+            <label for="dt">Preferred date</label>
+            <input id="dt" name="preferred_date" type="date" required />
+          </div>
+          <div class="field">
+            <span class="field__label" id="slot-label">Preferred time</span>
+            <div class="slots" role="group" aria-labelledby="slot-label">
+              {timeSlots.map((s) => (
+                <button type="button" class="slot" data-slot={s.value} aria-pressed="false">{s.label}</button>
+              ))}
+            </div>
+            <input type="hidden" name="preferred_time" id="slot-value" value="" />
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label for="msg">About the job</label>
+          <textarea id="msg" name="message" rows="4" maxlength="3000"></textarea>
+        </div>
+
+        <!-- Honeypot: humans never see or fill this -->
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label><input id="company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="consent">
+          <input id="ok" name="consent" type="checkbox" value="yes" required />
+          <label for="ok">Vectr may contact me about this enquiry. See our <a href="/privacy">Privacy Policy</a>.</label>
+        </div>
+
+        <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light" data-size="flexible"></div>
+
+        <p class="form__error" id="contact-error" role="alert" hidden></p>
+
+        <div class="form__foot">
+          <button type="submit" class="btn btn--navy" id="contact-submit">Arrange my call</button>
+          <span class="form__note">Protected by Cloudflare Turnstile</span>
+        </div>
+      </form>
+    </div>
+  </div>
+  <ScrollLink to="welcome" label="Back to the top" up />
+</section>
+
+<script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const sent = document.getElementById('contact-sent') as HTMLElement | null;
+  const sentText = document.getElementById('contact-sent-text') as HTMLElement | null;
+  const again = document.getElementById('contact-again') as HTMLButtonElement | null;
+  const errorBox = document.getElementById('contact-error') as HTMLElement | null;
+  const submit = document.getElementById('contact-submit') as HTMLButtonElement | null;
+  const dateInput = document.getElementById('dt') as HTMLInputElement | null;
+  const slotValue = document.getElementById('slot-value') as HTMLInputElement | null;
+  const slotButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.slot'));
+
+  // Earliest selectable date: tomorrow (local time).
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const t = new Date();
+  t.setDate(t.getDate() + 1);
+  if (dateInput) dateInput.min = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+
+  slotButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      slotButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      if (slotValue) slotValue.value = btn.dataset.slot || '';
+    });
+  });
+
+  const showError = (msg: string) => {
+    if (!errorBox) return;
+    errorBox.textContent = msg;
+    errorBox.hidden = false;
+  };
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (errorBox) errorBox.hidden = true;
+    if (!form.reportValidity()) return;
+
+    const data = new FormData(form);
+    if (!data.get('cf-turnstile-response')) {
+      showError('Please wait a moment for the spam check to finish, then try again.');
+      return;
+    }
+
+    if (submit) { submit.disabled = true; submit.textContent = 'Sending…'; }
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: data, headers: { Accept: 'application/json' } });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || !json.ok) throw new Error(json.error || 'Something went wrong.');
+
+      const date = String(data.get('preferred_date') || '');
+      const slot = slotButtons.find((b) => b.dataset.slot === data.get('preferred_time'));
+      let when = 'soon';
+      if (date) {
+        const d = new Date(`${date}T12:00:00`);
+        when = 'on ' + d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+      }
+      if (sentText) sentText.textContent = `Thank you — we'll call you ${when}${slot ? ', ' + (slot.textContent || '').trim().toLowerCase() : ''}.`;
+      form.hidden = true;
+      if (sent) sent.hidden = false;
+    } catch (err) {
+      showError(`${(err as Error).message} Please try again, or call us on 07766 822280.`);
+      // @ts-ignore — Turnstile global
+      if (window.turnstile) window.turnstile.reset();
+    } finally {
+      if (submit) { submit.disabled = false; submit.textContent = 'Arrange my call'; }
+    }
+  });
+
+  again?.addEventListener('click', () => {
+    form?.reset();
+    slotButtons.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    if (slotValue) slotValue.value = '';
+    // @ts-ignore — Turnstile global
+    if (window.turnstile) window.turnstile.reset();
+    if (form) form.hidden = false;
+    if (sent) sent.hidden = true;
+  });
+</script>

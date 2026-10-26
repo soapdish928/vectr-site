@@ -1,0 +1,16 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-white.png';
+import { site } from '../data/site';
+---
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__logo" href="/#welcome" aria-label="Vectr home">
+      <Image src={logo} alt="Vectr" height={36} densities={[1, 2]} loading="eager" />
+    </a>
+    <div class="site-header__actions">
+      <a class="site-header__phone" href={site.phoneHref}>{site.phoneDisplay}</a>
+      <a class="btn btn--small" href="/#contact">Arrange a call</a>
+    </div>
+  </div>
+</header>

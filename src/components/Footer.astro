@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/logo-white.png';
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <Image src={logo} alt="Vectr" height={40} densities={[1, 2]} />
+        <p class="site-footer__tag">{site.tagline}</p>
+      </div>
+      <div class="site-footer__contact">
+        <a href={site.phoneHref}>{site.phoneIntl}</a>
+        <a href={`mailto:${site.email}`}>{site.email}</a>
+      </div>
+    </div>
+    <div class="site-footer__bottom">
+      <span>{site.areas.join(' · ')}</span>
+      <span class="site-footer__links">
+        <a href="/privacy">Privacy</a>
+        <span>© {year} Vectr</span>
+      </span>
+    </div>
+  </div>
+</footer>

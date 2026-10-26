@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+import heroImg from '../assets/hero-rack.jpg';
+import { site } from '../data/site';
+---
+<section id="welcome" class="hero">
+  <div class="hero__media">
+    <Image
+      class="hero__img"
+      src={heroImg}
+      alt="A switch and patch panel in a rack, every port connected with neatly looped leads, tinted blue"
+      widths={[640, 1000]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="hero__tint" aria-hidden="true"></div>
+    <div class="hero__shade" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__panel">
+    <span class="hero__bracket" aria-hidden="true"></span>
+    <p class="eyebrow eyebrow--light">Networks · Security · Audio &amp; Video</p>
+    <h1 class="h1">Networks, security, sound and screen — <em class="accent-em">quietly</em> installed.</h1>
+    <p class="hero__sub">
+      Integrated networking, security and audio-visual (AV) systems for homes and workplaces — designed around you,
+      installed with care, and always explained.
+    </p>
+    <div class="hero__ctas">
+      <a class="btn" href="#contact">Arrange a call</a>
+      <a class="hero__secondary" href="#services">Explore what we do</a>
+    </div>
+    <div class="hero__areas">{site.areas.join(' · ')}</div>
+  </div>
+
+  <a class="hero__scroll" href="#services" aria-label="Scroll to What we do">
+    SCROLL
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M3 9l5 5 5-5" /></svg>
+  </a>
+</section>

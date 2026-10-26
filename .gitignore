@@ -1,0 +1,21 @@
+# build output
+dist/
+.astro/
+
+# dependencies
+node_modules/
+
+# local secrets — never commit
+.dev.vars
+.env
+.env.*
+!.env.example
+
+# Cloudflare local state
+.wrangler/
+
+# OS / editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+*.log

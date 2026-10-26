@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import Services from '../components/Services.astro';
+import Who from '../components/Who.astro';
+import Approach from '../components/Approach.astro';
+import Aftercare from '../components/Aftercare.astro';
+import Reviews from '../components/Reviews.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import { site } from '../data/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'Vectr',
+  url: site.url,
+  telephone: '+447766822280',
+  email: site.email,
+  description: site.description,
+  image: new URL('/og-image.jpg', site.url).href,
+  areaServed: site.areas.map((a) => ({ '@type': 'AdministrativeArea', name: a })),
+};
+---
+<Base jsonLd={jsonLd}>
+  <Header />
+  <main id="main">
+    <Hero />
+    <Services />
+    <Who />
+    <Approach />
+    <Aftercare />
+    <Reviews />
+    <Contact />
+  </main>
+  <Footer />
+</Base>
