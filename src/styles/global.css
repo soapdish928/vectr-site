@@ -385,3 +385,6 @@ a:hover { color: var(--navy-deep); }
 .when__row .field input[type='date'] { width: 190px; }
 .slot { min-height: 44px; padding: 0 16px; }
 .btn--navy { min-height: 50px; }
+
+/* Leave room under the footer so the floating scroll button never covers the Privacy link */
+@media (min-width: 701px) { .site-footer { padding-bottom: 104px; } }
