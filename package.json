@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "vectr.uk — single-page site, built with Astro and hosted on Cloudflare Pages",
+  "description": "vectr.uk \u2014 single-page site, built with Astro and hosted on Cloudflare Pages",
   "scripts": {
     "dev": "astro dev",
+    "start": "astro dev",
     "build": "astro build",
     "preview": "astro build && wrangler pages dev dist",
     "check": "astro check"
