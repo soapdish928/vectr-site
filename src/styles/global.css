@@ -248,7 +248,7 @@ a:hover { color: var(--navy-deep); }
 
 /* ---------- Contact ---------- */
 .contact__h { font-size: clamp(56px, 7vw, 104px); line-height: 0.95; }
-.contact__h em { color: var(--accent-ink); }
+.contact__h em { color: var(--accent); }
 .details { border-top: 1px solid var(--line); max-width: 440px; margin: 0; }
 .details div { display: flex; justify-content: space-between; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--line); }
 .details dt { font-size: 12px; font-weight: 600; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
