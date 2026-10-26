@@ -14,7 +14,7 @@ export const site = {
   email: 'info@vectr.uk',
   privacyEmail: 'admin@vectr.uk',
   areas: ['Berkshire', 'Hampshire', 'Oxfordshire', 'Wiltshire'],
-  hours: '[Opening hours]',
+  hours: 'Mon–Fri 9:00am – 5:00pm, Sat by appointment',
   supportPlan: '[Plan details / price]',
   googleReviewsUrl: '', // paste your Google Business Profile reviews link here
 };
