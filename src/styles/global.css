@@ -212,7 +212,7 @@ a:hover { color: var(--navy-deep); }
 .note { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 14px; }
 .note__title { margin: 0 0 4px; font-weight: 600; font-size: 16px; }
 .note__text { margin: 0; font-size: 15px; line-height: 1.6; color: var(--muted); }
-.founder__name { margin: 0 0 4px; font-family: var(--serif); font-size: 26px; font-weight: 400; }
+.lead-engineer__title { margin: 0 0 4px; font-family: var(--serif); font-size: 26px; font-weight: 400; }
 
 .brands { margin-top: 88px; display: flex; flex-direction: column; gap: 28px; }
 .brands__label { display: flex; align-items: center; gap: 20px; }
