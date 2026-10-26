@@ -12,8 +12,10 @@ binding = "ASSETS"
 CONTACT_TO = "info@vectr.uk"
 CONTACT_FROM = "Vectr website <website@vectr.uk>"
 SEND_CONFIRMATION = "true"
+GOOGLE_PLACE_ID = "ChIJhcAQbabkKiwRwsMm_kWfr34"
 
 # Secrets are NOT stored here. Set them in the Cloudflare dashboard
 # (Workers & Pages → vectr-site → Settings → Variables and Secrets), or locally in .dev.vars:
 #   TURNSTILE_SECRET_KEY
 #   RESEND_API_KEY
+#   GOOGLE_PLACES_API_KEY

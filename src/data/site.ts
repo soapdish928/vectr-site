@@ -16,7 +16,7 @@ export const site = {
   areas: ['Berkshire', 'Hampshire', 'Oxfordshire', 'Wiltshire'],
   hours: 'Mon–Fri 9:00am – 5:00pm, Sat by appointment',
   supportPlan: '[Plan details / price]',
-  googleReviewsUrl: '', // paste your Google Business Profile reviews link here
+  googleReviewsUrl: 'https://g.page/r/CcLDJv5Fn69-EAE/review',
 };
 
 export const services = [
@@ -35,16 +35,6 @@ export const steps = [
   { title: 'Support that continues', text: 'Help when you need it, long after install day.' },
 ];
 
-// Paste Google reviews verbatim, with the reviewer's name as shown on Google.
-export const reviews = {
-  rating: '[4.9]',
-  count: '[N]',
-  featured: { quote: '[A favourite Google review, pasted verbatim]', name: '[Reviewer]' },
-  more: [
-    { quote: '[Paste a Google review here, verbatim]', name: '[Reviewer]' },
-    { quote: '[Paste a Google review here, verbatim]', name: '[Reviewer]' },
-  ],
-};
 
 export const brands = ['UniFi', 'Dahua', 'Ajax', 'Sonos'];
 

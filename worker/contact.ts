@@ -16,6 +16,8 @@ export interface Env {
   ASSETS: { fetch: (req: Request) => Promise<Response> };
   TURNSTILE_SECRET_KEY: string;
   RESEND_API_KEY: string;
+  GOOGLE_PLACES_API_KEY?: string;
+  GOOGLE_PLACE_ID?: string;
   CONTACT_TO?: string;
   CONTACT_FROM?: string;
   SEND_CONFIRMATION?: string;
