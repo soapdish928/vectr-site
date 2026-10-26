@@ -52,7 +52,7 @@ export const interests = [
   { value: 'wifi', label: 'Wi-Fi & networking' },
   { value: 'cctv', label: 'CCTV & alarms' },
   { value: 'av', label: 'Audio & video' },
-  { value: 'community', label: 'Community / guest Wi-Fi' },
+  { value: 'community', label: 'Community / guest WiFi' },
   { value: 'support', label: 'Support for an existing system' },
   { value: 'other', label: 'Something else' },
 ];

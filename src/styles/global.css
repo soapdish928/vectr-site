@@ -396,7 +396,8 @@ a:hover { color: var(--navy-deep); }
    Sections are flex columns, and flex items default to `min-width: auto`, so the
    brands marquee track (width: max-content) was stretching the Reviews block to
    1040px on phones. Constrain the flex children so the marquee clips instead. */
-.section > * { min-width: 0; max-width: 100%; }
+.section > * { min-width: 0; }
+.section > :not(.container) { max-width: 100%; }
 .reviews { width: 100%; min-width: 0; }
 .brands, .marquee { min-width: 0; max-width: 100%; }
 
