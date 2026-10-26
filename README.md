@@ -12,7 +12,7 @@ src/styles/global.css   ← colours, fonts and layout (tokens at the top)
 src/assets/             ← images (Astro resizes and converts them at build time)
 src/pages/              ← index (home), privacy, 404
 worker/index.ts         ← routes /api/contact to the form handler; serves the 404 page
-worker/contact.ts       ← form handler: Turnstile check → validate → email via Resend
+worker/contact.ts       ← form handler: Turnstile check → validate → email via Google Apps Script
 public/                 ← copied as-is: _redirects, _headers, favicons, og-image, robots.txt, sitemap.xml
 ```
 
@@ -25,7 +25,7 @@ npm run dev        # http://localhost:4321 — pages only (the form needs `npm r
 npm run preview    # builds, then runs the site + Worker locally via Wrangler
 ```
 
-For `npm run preview`, copy `.dev.vars.example` to `.dev.vars` and add a real Resend key if you want emails to send.
+For `npm run preview`, copy `.dev.vars.example` to `.dev.vars` and add the mail relay URL and secret if you want emails to send.
 
 ## Deploying
 
@@ -54,10 +54,14 @@ git push
 Cloudflare dashboard → **Turnstile** → Add widget → hostnames `vectr.uk`, `www.vectr.uk`, `vectr-site.<your-subdomain>.workers.dev` → Managed.
 Keep the **site key** (public) and the **secret key**.
 
-### 3. Resend (form email)
-1. Sign up at resend.com and add the domain **vectr.uk**.
-2. Add the DNS records Resend gives you. They use a sending subdomain and do **not** touch your Google Workspace MX records.
-3. Create an API key with send-only permission.
+### 3. Form email (Google Apps Script relay)
+The Worker hands each enquiry to a small Google Apps Script, which sends it from your Workspace mailbox. No DNS changes.
+1. Go to script.google.com (signed in as the Workspace account that should send) → **New project**.
+2. Paste in `worker/apps-script-mailer.gs`.
+3. **Project Settings → Script properties → Add**: `MAIL_SECRET` = a long random string (e.g. `openssl rand -hex 32`).
+4. **Deploy → New deployment → Web app**: *Execute as* **Me**, *Who has access* **Anyone**. Authorise when asked. Copy the **Web app URL**.
+5. In Cloudflare add the secrets `MAIL_WEBHOOK_URL` (that URL) and `MAIL_WEBHOOK_SECRET` (the same random string).
+After editing the script later, use **Deploy → Manage deployments → Edit → New version** so the URL stays the same.
 
 ### 4. Cloudflare Workers (connected to GitHub)
 Dashboard → **Workers & Pages** → Create → **Import a repository** → choose `vectr-site`.
@@ -80,9 +84,10 @@ Dashboard → **Workers & Pages** → Create → **Import a repository** → cho
 | Name | Value |
 |---|---|
 | `TURNSTILE_SECRET_KEY` | Turnstile secret key |
-| `RESEND_API_KEY` | Resend API key |
+| `MAIL_WEBHOOK_URL` | Apps Script web app URL |
+| `MAIL_WEBHOOK_SECRET` | Same value as the script's `MAIL_SECRET` |
 
-`CONTACT_TO`, `CONTACT_FROM` and `SEND_CONFIRMATION` come from `wrangler.toml` (redeploying resets them to those values).
+`CONTACT_TO` and `SEND_CONFIRMATION` come from `wrangler.toml` (redeploying resets them to those values).
 After the first deploy, test at `https://vectr-site.<your-subdomain>.workers.dev` — add that hostname to the Turnstile widget first.
 
 ### 5. Move vectr.uk to Cloudflare (do this last)

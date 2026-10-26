@@ -3,23 +3,24 @@
  *
  * 1. Rejects bots (honeypot + Cloudflare Turnstile).
  * 2. Validates the enquiry on the server (never trust the browser).
- * 3. Emails it to CONTACT_TO via Resend, with Reply-To set to the customer.
+ * 3. Emails it to CONTACT_TO through the Google Apps Script relay (worker/apps-script-mailer.gs),
+ *    sent from the Workspace mailbox, with Reply-To set to the customer.
  * 4. Optionally sends the customer a short confirmation.
  *
  * Secrets (Cloudflare dashboard → Workers & Pages → vectr-site → Settings → Variables and Secrets):
- *   TURNSTILE_SECRET_KEY, RESEND_API_KEY
+ *   TURNSTILE_SECRET_KEY, MAIL_WEBHOOK_URL, MAIL_WEBHOOK_SECRET
  * Plain variables (wrangler.toml [vars] or dashboard):
- *   CONTACT_TO, CONTACT_FROM, SEND_CONFIRMATION
+ *   CONTACT_TO, SEND_CONFIRMATION
  */
 
 export interface Env {
   ASSETS: { fetch: (req: Request) => Promise<Response> };
   TURNSTILE_SECRET_KEY: string;
-  RESEND_API_KEY: string;
+  MAIL_WEBHOOK_URL: string;
+  MAIL_WEBHOOK_SECRET: string;
   GOOGLE_PLACES_API_KEY?: string;
   GOOGLE_PLACE_ID?: string;
   CONTACT_TO?: string;
-  CONTACT_FROM?: string;
   SEND_CONFIRMATION?: string;
 }
 
@@ -58,14 +59,17 @@ async function verifyTurnstile(token: string, secret: string, ip: string | null)
   return out.success === true;
 }
 
-async function sendEmail(env: Env, payload: Record<string, unknown>) {
-  const res = await fetch('https://api.resend.com/emails', {
+async function sendEmail(env: Env, mail: { to: string; replyTo: string; subject: string; text: string; html?: string }) {
+  // Apps Script answers a POST with a redirect to the result; fetch follows it.
+  const res = await fetch(env.MAIL_WEBHOOK_URL, {
     method: 'POST',
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload),
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ secret: env.MAIL_WEBHOOK_SECRET, ...mail }),
+    redirect: 'follow',
   });
-  if (!res.ok) {
-    console.error('Resend error', res.status, await res.text());
+  const out = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+  if (!res.ok || !out?.ok) {
+    console.error('Mail relay error', res.status, out?.error);
     throw new Error('email_failed');
   }
 }
@@ -113,13 +117,12 @@ export async function handleContact(request: Request, env: Env): Promise<Respons
   const when = `${ukLongDate(d.date)} — ${slot}`;
   const name = `${d.firstName} ${d.lastName}`;
 
-  if (!env.RESEND_API_KEY) {
-    console.error('RESEND_API_KEY is not set');
+  if (!env.MAIL_WEBHOOK_URL || !env.MAIL_WEBHOOK_SECRET) {
+    console.error('MAIL_WEBHOOK_URL / MAIL_WEBHOOK_SECRET not set');
     return json({ ok: false, error: 'Our form is temporarily unavailable.' }, 500);
   }
 
   const to = env.CONTACT_TO || 'info@vectr.uk';
-  const from = env.CONTACT_FROM || 'Vectr website <website@vectr.uk>';
 
   const rows: [string, string][] = [
     ['Name', name],
@@ -137,9 +140,8 @@ export async function handleContact(request: Request, env: Env): Promise<Respons
 
   try {
     await sendEmail(env, {
-      from,
-      to: [to],
-      reply_to: d.email,
+      to,
+      replyTo: d.email,
       subject: `Call request: ${name} — ${ukLongDate(d.date)}, ${slot.toLowerCase()}`,
       text,
       html,
@@ -148,9 +150,8 @@ export async function handleContact(request: Request, env: Env): Promise<Respons
     if (env.SEND_CONFIRMATION === 'true') {
       const msg = `Hi ${d.firstName},\n\nThanks for getting in touch. We'll call you on ${ukLongDate(d.date)} (${slot.toLowerCase()}) on ${d.phone}.\n\nIf anything changes, just reply to this email or call 07766 822280.\n\nNick\nVectr — making technology simple\nhttps://www.vectr.uk`;
       await sendEmail(env, {
-        from,
-        to: [d.email],
-        reply_to: to,
+        to: d.email,
+        replyTo: to,
         subject: 'We’ve received your request — Vectr',
         text: msg,
       }).catch((e) => console.error('Confirmation email failed', e)); // don't fail the request if only this fails
