@@ -399,3 +399,8 @@ a:hover { color: var(--navy-deep); }
 .section > * { min-width: 0; max-width: 100%; }
 .reviews { width: 100%; min-width: 0; }
 .brands, .marquee { min-width: 0; max-width: 100%; }
+
+/* Tighter number column on phones so "Community & guest Wi-Fi" stays on one line */
+@media (max-width: 700px) {
+  #services .row { grid-template-columns: 28px minmax(0, 1fr); gap: 8px; }
+}
