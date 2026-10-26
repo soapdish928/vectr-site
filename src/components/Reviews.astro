@@ -1,5 +1,7 @@
 ---
-import { reviews, site } from '../data/site';
+import { reviews, site, brands } from '../data/site';
+// Repeat the brand list so the marquee loops seamlessly (translateX -50%).
+const loop = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 const star = 'M8 1.5l1.9 4.1 4.5.5-3.4 3 1 4.4L8 11.3 4 13.5l1-4.4-3.4-3 4.5-.5z';
 ---
 <section id="reviews" class="section section--centred section--navy">
@@ -29,5 +31,13 @@ const star = 'M8 1.5l1.9 4.1 4.5.5-3.4 3 1 4.4L8 11.3 4 13.5l1-4.4-3.4-3 4.5-.5z
     {site.googleReviewsUrl && (
       <a class="link-underline" href={site.googleReviewsUrl} rel="noopener" target="_blank">Read all reviews on Google</a>
     )}
+    <div class="brands brands--navy">
+      <div class="brands__label"><span class="eyebrow">Built on technology we trust</span><span aria-hidden="true"></span></div>
+      <div class="marquee" role="img" aria-label={`Technology we use: ${brands.join(', ')}`}>
+        <div class="marquee__track" aria-hidden="true">
+          {loop.map((b) => <span class="marquee__item">{b}</span>)}
+        </div>
+      </div>
+    </div>
   </div>
 </section>

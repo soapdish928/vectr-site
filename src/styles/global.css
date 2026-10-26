@@ -319,3 +319,69 @@ a:hover { color: var(--navy-deep); }
 .scroll-fab__icon { transition: transform 0.2s ease; }
 .scroll-fab.is-top .scroll-fab__icon { transform: rotate(180deg); }
 @media (max-width: 700px) { .scroll-fab { display: none; } }
+
+/* ==========================================================================
+   Fit-to-screen: each section is one "page" that fits a laptop window
+   (target: everything visible at 1280–1470px wide and >= 800px tall).
+   ========================================================================== */
+.section {
+  min-height: 100vh; min-height: 100svh;
+  padding: 64px var(--gutter) 48px;
+  display: flex; flex-direction: column; justify-content: center;
+}
+.section--centred { min-height: 100vh; min-height: 100svh; }
+.h2 { font-size: clamp(40px, 4.2vw, 64px); }
+
+/* What we do */
+#services .services__intro { gap: 20px; }
+.services__img { height: 240px; margin-top: 8px; }
+#services .row { padding: 14px 0; }
+#services .row__title { font-size: 26px; margin-bottom: 4px; }
+#services .row__num { padding-top: 6px; }
+
+/* Who we work with */
+#who > .container { gap: 36px !important; }
+#who .cards-2 { gap: 24px; }
+.who-card img { height: 230px; }
+.who-card__body { padding: 26px 28px 30px; gap: 10px; }
+.who-card__title { font-size: 32px; }
+
+/* How we work */
+#approach .split { gap: 64px; }
+#approach .stack { gap: 32px !important; }
+.section--navy .row { padding: 14px 0; }
+
+/* Experience & aftercare */
+#aftercare > .container:first-child { gap: 36px !important; }
+.care-card { padding: 30px 32px; gap: 12px; }
+.care-card__big { font-size: 88px; }
+.care-card__title { font-size: 34px; }
+.care-card__title--sm { font-size: 26px; }
+.notes { margin-top: 32px; padding-top: 24px; }
+
+/* Reviews (now also carries the equipment brands) */
+.reviews { gap: 32px; }
+.review-featured { gap: 18px; }
+.review-featured blockquote { font-size: clamp(28px, 3vw, 44px); }
+.review { padding: 24px 28px; gap: 12px; }
+.brands--navy { margin-top: 8px; width: 100%; gap: 12px; text-align: left; }
+.brands--navy .eyebrow { color: var(--accent); }
+.brands--navy .brands__label span:last-child { background: var(--navy-line); }
+.brands--navy .marquee__item { color: #7F8FAA; font-size: 24px; line-height: 56px; }
+
+/* Contact */
+.contact__h { font-size: clamp(52px, 5.5vw, 84px); }
+#contact { padding-top: 44px; padding-bottom: 36px; }
+#contact .split { gap: 64px; }
+.details div { padding: 14px 0; }
+.form-card { padding: 30px 32px; }
+.form { gap: 16px; }
+.form__grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 14px; }
+.field { gap: 6px; }
+.field input, .field select { min-height: 44px; }
+.field textarea { min-height: 0; }
+.when { padding: 16px 18px; gap: 10px; }
+.when__row { display: flex; flex-wrap: wrap; gap: 14px 20px; align-items: flex-end; }
+.when__row .field input[type='date'] { width: 190px; }
+.slot { min-height: 44px; padding: 0 16px; }
+.btn--navy { min-height: 50px; }
