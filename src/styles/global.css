@@ -289,7 +289,7 @@ a:hover { color: var(--navy-deep); }
 .site-footer { padding: 80px var(--gutter) 44px; background: var(--navy-deep); color: var(--on-navy); }
 .site-footer__top { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; align-items: flex-end; }
 .site-footer__brand { display: flex; flex-direction: column; gap: 18px; }
-.site-footer__brand img { height: 40px; width: auto; }
+.site-footer__brand img { height: 40px; width: auto; align-self: flex-start; object-fit: contain; }
 .site-footer__tag { margin: 0; font-family: var(--serif); font-style: italic; font-size: 26px; }
 .site-footer__contact { display: flex; flex-direction: column; gap: 10px; font-size: 15px; }
 .site-footer a { color: var(--on-navy); text-decoration: none; }
