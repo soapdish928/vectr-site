@@ -45,14 +45,21 @@ const star = 'M8 1.5l1.9 4.1 4.5.5-3.4 3 1 4.4L8 11.3 4 13.5l1-4.4-3.4-3 4.5-.5z
       const res = await fetch('/api/reviews');
       const d = await res.json();
       if (!d.ok || !d.reviews?.length) return;
-      const [first, ...rest] = d.reviews;
+      // Feature the longest review that still reads well as a headline quote; else the shortest.
+      type R = { text: string; name: string };
+      const byLen: R[] = [...d.reviews].sort((a: R, b: R) => a.text.length - b.text.length);
+      const first: R = [...byLen].reverse().find((r) => r.text.length <= 220) ?? byLen[0];
+      const rest: R[] = d.reviews.filter((r: R) => r !== first);
       const set = (id: string, t: string) => { const el = document.getElementById(id); if (el) el.textContent = t; };
       set('rv-featured-text', `“${first.text}”`);
+      const fq = document.getElementById('rv-featured-text');
+      const n = first.text.length;
+      if (fq) fq.dataset.size = n <= 120 ? 'lg' : n <= 240 ? 'md' : 'sm';
       set('rv-featured-name', `${first.name} · Google`);
       if (d.rating) set('rv-score', Number(d.rating).toFixed(1));
       if (d.count) set('rv-count', `${d.count} Google reviews`);
       const grid = document.getElementById('rv-grid');
-      rest.slice(0, 2).forEach((r: { text: string; name: string }) => {
+      rest.slice(0, 2).forEach((r) => {
         const fig = document.createElement('figure');
         fig.className = 'review';
         const q = document.createElement('blockquote');
