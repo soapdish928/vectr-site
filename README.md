@@ -51,7 +51,7 @@ git push
    ```
 
 ### 2. Cloudflare Turnstile (spam check)
-Cloudflare dashboard → **Turnstile** → Add widget → hostnames `vectr.uk`, `www.vectr.uk`, `vectr-site.pages.dev` → Managed.
+Cloudflare dashboard → **Turnstile** → Add widget → hostnames `vectr.uk`, `www.vectr.uk`, `vectr-site.<your-subdomain>.workers.dev` → Managed.
 Keep the **site key** (public) and the **secret key**.
 
 ### 3. Resend (form email)
