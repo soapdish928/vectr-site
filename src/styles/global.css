@@ -50,7 +50,7 @@ a:hover { color: var(--navy-deep); }
 
 /* ---------- Layout helpers ---------- */
 .container { width: 100%; max-width: var(--max); margin: 0 auto; }
-.section { padding: 140px var(--gutter) 56px; }
+.section { padding: 140px var(--gutter); }
 .section--centred { min-height: 760px; display: flex; flex-direction: column; justify-content: center; }
 .section--alt { background: var(--alt); }
 .section--navy { background: var(--navy); color: var(--on-navy); }
@@ -111,7 +111,13 @@ a:hover { color: var(--navy-deep); }
 }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; height: 880px; overflow: hidden; background: var(--navy); color: var(--on-navy); }
+.hero {
+  position: relative; overflow: hidden; background: var(--navy); color: var(--on-navy);
+  /* Fill the window below the 88px header, so the whole hero fits on screen at any size */
+  height: 880px;
+  height: clamp(600px, calc(100vh - 88px), 980px);
+  height: clamp(600px, calc(100svh - 88px), 980px);
+}
 .hero__media { position: absolute; inset: 0; overflow: hidden; }
 .hero__img {
   position: absolute; top: -16px; left: -16px; width: calc(100% + 32px); height: calc(100% + 32px);
@@ -300,3 +306,16 @@ a:hover { color: var(--navy-deep); }
 .prose h2 { font-family: var(--serif); font-weight: 400; font-size: 30px; margin: 48px 0 12px; }
 .prose p, .prose li { font-size: 17px; line-height: 1.7; color: var(--muted); }
 .prose a { color: var(--accent-ink); }
+
+/* ---------- Floating scroll button ---------- */
+.scroll-fab {
+  position: fixed; z-index: 50; bottom: 24px; right: max(var(--gutter), calc((100vw - var(--max)) / 2));
+  display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px;
+  background: var(--navy); border: 1px solid var(--navy-link); border-radius: 999px;
+  font-size: 12px; letter-spacing: 0.2em; color: var(--on-navy); text-decoration: none;
+  box-shadow: 0 10px 30px -10px rgba(8, 20, 40, 0.5);
+}
+.scroll-fab:hover { color: #fff; border-color: var(--accent); }
+.scroll-fab__icon { transition: transform 0.2s ease; }
+.scroll-fab.is-top .scroll-fab__icon { transform: rotate(180deg); }
+@media (max-width: 700px) { .scroll-fab { display: none; } }

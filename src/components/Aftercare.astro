@@ -1,6 +1,5 @@
 ---
 import { site, brands } from '../data/site';
-import ScrollLink from './ScrollLink.astro';
 // Repeat the brand list so the marquee loops seamlessly (translateX -50%).
 const loop = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 ---
@@ -55,5 +54,4 @@ const loop = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
       </div>
     </div>
   </div>
-  <ScrollLink to="reviews" label="Scroll to Reviews" />
 </section>

@@ -1,0 +1,53 @@
+---
+// One floating button, bottom-right, always visible on desktop.
+// It works out which section is next from the scroll position, and on the
+// last section turns into "Back to top". Hidden on phones, where people swipe.
+const sections = [
+  { id: 'welcome', label: 'Top' },
+  { id: 'services', label: 'What we do' },
+  { id: 'who', label: 'Who we work with' },
+  { id: 'approach', label: 'How we work' },
+  { id: 'aftercare', label: 'Experience and aftercare' },
+  { id: 'reviews', label: 'Reviews' },
+  { id: 'contact', label: 'Contact' },
+];
+---
+<a id="scroll-next" class="scroll-fab" href="#services" aria-label="Scroll to What we do" data-sections={JSON.stringify(sections)}>
+  <span class="scroll-fab__label">SCROLL</span>
+  <svg class="scroll-fab__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v12M3 9l5 5 5-5" /></svg>
+</a>
+
+<script>
+  const btn = document.getElementById('scroll-next') as HTMLAnchorElement | null;
+  if (btn) {
+    const list = JSON.parse(btn.dataset.sections || '[]') as { id: string; label: string }[];
+    const label = btn.querySelector('.scroll-fab__label') as HTMLElement;
+    const update = () => {
+      const y = window.scrollY + 120; // sections starting within 120px count as "current"
+      const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+      const next = atBottom ? undefined : list.find((s) => {
+        const el = document.getElementById(s.id);
+        return el && el.getBoundingClientRect().top + window.scrollY > y;
+      });
+      if (next) {
+        btn.href = `#${next.id}`;
+        btn.setAttribute('aria-label', `Scroll to ${next.label}`);
+        label.textContent = 'SCROLL';
+        btn.classList.remove('is-top');
+      } else {
+        btn.href = '#welcome';
+        btn.setAttribute('aria-label', 'Back to the top');
+        label.textContent = 'BACK TO TOP';
+        btn.classList.add('is-top');
+      }
+    };
+    let queued = false;
+    window.addEventListener('scroll', () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => { queued = false; update(); });
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  }
+</script>

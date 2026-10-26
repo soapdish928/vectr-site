@@ -1,6 +1,5 @@
 ---
 import { site, interests, timeSlots } from '../data/site';
-import ScrollLink from './ScrollLink.astro';
 
 // Public Turnstile site key (set PUBLIC_TURNSTILE_SITE_KEY in Cloudflare Pages).
 // Falls back to Cloudflare's always-pass test key for local development.
@@ -85,7 +84,6 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000
       </form>
     </div>
   </div>
-  <ScrollLink to="welcome" label="Back to the top" up />
 </section>
 
 <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
