@@ -83,7 +83,10 @@ export async function handleContact(request: Request, env: Env): Promise<Respons
   }
 
   // Honeypot: pretend success so bots learn nothing.
-  if (clean(form.get('company'), 100)) return json({ ok: true });
+  if (clean(form.get('hp_trap'), 100)) {
+    console.warn('Honeypot tripped — submission dropped');
+    return json({ ok: true });
+  }
 
   // Spam check
   const token = clean(form.get('cf-turnstile-response'), 2048);
