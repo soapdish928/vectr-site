@@ -1,26 +1,25 @@
 /**
- * POST /api/contact — Cloudflare Pages Function
+ * POST /api/contact — handled by the Worker in worker/index.ts
  *
  * 1. Rejects bots (honeypot + Cloudflare Turnstile).
  * 2. Validates the enquiry on the server (never trust the browser).
  * 3. Emails it to CONTACT_TO via Resend, with Reply-To set to the customer.
  * 4. Optionally sends the customer a short confirmation.
  *
- * Secrets (Cloudflare dashboard → Pages → vectr-site → Settings → Variables and secrets):
+ * Secrets (Cloudflare dashboard → Workers & Pages → vectr-site → Settings → Variables and Secrets):
  *   TURNSTILE_SECRET_KEY, RESEND_API_KEY
  * Plain variables (wrangler.toml [vars] or dashboard):
  *   CONTACT_TO, CONTACT_FROM, SEND_CONFIRMATION
  */
 
-interface Env {
+export interface Env {
+  ASSETS: { fetch: (req: Request) => Promise<Response> };
   TURNSTILE_SECRET_KEY: string;
   RESEND_API_KEY: string;
   CONTACT_TO?: string;
   CONTACT_FROM?: string;
   SEND_CONFIRMATION?: string;
 }
-
-type Ctx = { request: Request; env: Env };
 
 const SERVICES: Record<string, string> = {
   wifi: 'Wi-Fi & networking',
@@ -32,7 +31,7 @@ const SERVICES: Record<string, string> = {
 };
 const SLOTS: Record<string, string> = { morning: 'Morning', afternoon: 'Afternoon', evening: 'Early evening' };
 
-const json = (body: unknown, status = 200) =>
+export const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json; charset=utf-8' } });
 
 const clean = (v: FormDataEntryValue | null, max: number) => String(v ?? '').trim().slice(0, max);
@@ -69,7 +68,7 @@ async function sendEmail(env: Env, payload: Record<string, unknown>) {
   }
 }
 
-export const onRequestPost = async ({ request, env }: Ctx) => {
+export async function handleContact(request: Request, env: Env): Promise<Response> {
   let form: FormData;
   try {
     form = await request.formData();
@@ -159,6 +158,4 @@ export const onRequestPost = async ({ request, env }: Ctx) => {
   }
 
   return json({ ok: true });
-};
-
-export const onRequest = async () => json({ ok: false, error: 'Method not allowed.' }, 405);
+}

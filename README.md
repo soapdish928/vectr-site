@@ -1,7 +1,7 @@
 # vectr.uk
 
-Single-page website for Vectr, built with [Astro](https://astro.build) and hosted on **Cloudflare Pages**.
-Pages are static HTML. The only server code is the contact form handler in `functions/api/contact.ts`.
+Single-page website for Vectr, built with [Astro](https://astro.build) and hosted on **Cloudflare Workers** (static assets).
+Pages are static HTML. The only server code is the contact form handler in `worker/` — it runs only for `/api/contact`.
 
 ## Project layout
 
@@ -11,7 +11,8 @@ src/components/         ← one file per section (Hero, Services, Who, Approach,
 src/styles/global.css   ← colours, fonts and layout (tokens at the top)
 src/assets/             ← images (Astro resizes and converts them at build time)
 src/pages/              ← index (home), privacy, 404
-functions/api/contact.ts← form handler: Turnstile check → validate → email via Resend
+worker/index.ts         ← routes /api/contact to the form handler; serves the 404 page
+worker/contact.ts       ← form handler: Turnstile check → validate → email via Resend
 public/                 ← copied as-is: _redirects, _headers, favicons, og-image, robots.txt, sitemap.xml
 ```
 
@@ -21,7 +22,7 @@ public/                 ← copied as-is: _redirects, _headers, favicons, og-ima
 nvm install        # installs the Node version in .nvmrc (22.23.4)
 npm install
 npm run dev        # http://localhost:4321 — pages only (the form needs `npm run preview`)
-npm run preview    # builds, then runs the site + form handler locally via Wrangler
+npm run preview    # builds, then runs the site + Worker locally via Wrangler
 ```
 
 For `npm run preview`, copy `.dev.vars.example` to `.dev.vars` and add a real Resend key if you want emails to send.
@@ -58,21 +59,31 @@ Keep the **site key** (public) and the **secret key**.
 2. Add the DNS records Resend gives you. They use a sending subdomain and do **not** touch your Google Workspace MX records.
 3. Create an API key with send-only permission.
 
-### 4. Cloudflare Pages
-Dashboard → **Workers & Pages** → Create → **Pages** → Connect to Git → choose `vectr-site`.
+### 4. Cloudflare Workers (connected to GitHub)
+Dashboard → **Workers & Pages** → Create → **Import a repository** → choose `vectr-site`.
 
 | Setting | Value |
 |---|---|
-| Framework preset | Astro |
+| Project / Worker name | `vectr-site` (must match `name` in `wrangler.toml`) |
 | Build command | `npm run build` |
-| Build output directory | `dist` |
-| Environment variable | `NODE_VERSION` = `22.23.4` (Astro 7 needs ≥ 22.23.4) |
-| Environment variable | `PUBLIC_TURNSTILE_SITE_KEY` = *(Turnstile site key)* |
-| Secret | `TURNSTILE_SECRET_KEY` = *(Turnstile secret key)* |
-| Secret | `RESEND_API_KEY` = *(Resend API key)* |
+| Deploy command | `npx wrangler deploy` |
 
-`CONTACT_TO`, `CONTACT_FROM` and `SEND_CONFIRMATION` come from `wrangler.toml`. Override them in the dashboard if needed.
-After the first deploy, test the site at `https://vectr-site.pages.dev`, including sending the form.
+**Build variables** (Settings → Build → Variables and secrets — used while building):
+
+| Name | Value |
+|---|---|
+| `NODE_VERSION` | `22.23.4` (Astro 7 needs ≥ 22.23.4) |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Turnstile site key |
+
+**Runtime secrets** (Settings → Variables and Secrets — used by the contact form), type **Secret**:
+
+| Name | Value |
+|---|---|
+| `TURNSTILE_SECRET_KEY` | Turnstile secret key |
+| `RESEND_API_KEY` | Resend API key |
+
+`CONTACT_TO`, `CONTACT_FROM` and `SEND_CONFIRMATION` come from `wrangler.toml` (redeploying resets them to those values).
+After the first deploy, test at `https://vectr-site.<your-subdomain>.workers.dev` — add that hostname to the Turnstile widget first.
 
 ### 5. Move vectr.uk to Cloudflare (do this last)
 Email is on **Google Workspace**. These records must survive the move:
@@ -88,9 +99,9 @@ Email is on **Google Workspace**. These records must survive the move:
 1. Before changing anything, screenshot or export the current DNS records from Wix.
 2. Cloudflare → **Add a site** → `vectr.uk` → Free plan. Cloudflare scans and imports records. **Compare them against the export**, especially the MX, SPF, DKIM and DMARC records above.
 3. Change the domain's nameservers to the two Cloudflare gives you. If the domain was bought through Wix, do this in Wix's domain settings, or transfer the domain out.
-4. Once the zone is active: Pages → `vectr-site` → **Custom domains** → add `www.vectr.uk` and `vectr.uk`.
+4. Once the zone is active: Workers & Pages → `vectr-site` → Settings → **Domains & Routes** → add custom domains `www.vectr.uk` and `vectr.uk`.
 5. Add a redirect rule (Rules → Redirect Rules) from `vectr.uk/*` to `https://www.vectr.uk/$1` with a 301.
-6. Pages → `vectr-site` → **Metrics** → enable **Web Analytics**. It's cookieless, so no consent banner is needed.
+6. Cloudflare → **Web Analytics** → add `www.vectr.uk`. It's cookieless, so no consent banner is needed.
 7. Send a test email to info@vectr.uk from an outside address, and submit the website form.
 8. Google Search Console: resubmit `https://www.vectr.uk/sitemap.xml`.
 
