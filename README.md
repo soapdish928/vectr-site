@@ -18,7 +18,7 @@ public/                 ← copied as-is: _redirects, _headers, favicons, og-ima
 ## Working on it locally
 
 ```bash
-nvm use            # Node 22
+nvm install        # installs the Node version in .nvmrc (22.23.4)
 npm install
 npm run dev        # http://localhost:4321 — pages only (the form needs `npm run preview`)
 npm run preview    # builds, then runs the site + form handler locally via Wrangler
@@ -66,7 +66,7 @@ Dashboard → **Workers & Pages** → Create → **Pages** → Connect to Git �
 | Framework preset | Astro |
 | Build command | `npm run build` |
 | Build output directory | `dist` |
-| Environment variable | `NODE_VERSION` = `22` |
+| Environment variable | `NODE_VERSION` = `22.23.4` (Astro 7 needs ≥ 22.23.4) |
 | Environment variable | `PUBLIC_TURNSTILE_SITE_KEY` = *(Turnstile site key)* |
 | Secret | `TURNSTILE_SECRET_KEY` = *(Turnstile secret key)* |
 | Secret | `RESEND_API_KEY` = *(Resend API key)* |
