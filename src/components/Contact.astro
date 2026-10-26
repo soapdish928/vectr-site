@@ -2,8 +2,8 @@
 import { site, interests, timeSlots } from '../data/site';
 
 // Public Turnstile site key (set PUBLIC_TURNSTILE_SITE_KEY as a build variable in Cloudflare).
-// Falls back to Cloudflare's always-pass test key for local development.
-const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '1x00000000000000000000AA';
+// Falls back to the live vectr.uk widget key (public by design); the secret key lives in the Worker.
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFnVJ4drNbkgRqsH';
 ---
 <section id="contact" class="section">
   <div class="container split" style="align-items: start">
