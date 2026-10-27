@@ -83,6 +83,14 @@ function addCalendarEvent_(ev) {
   }
 }
 
+// Run this once from the editor (pick it in the function dropdown, then Run) to approve the Gmail and
+// Calendar permissions. Afterwards publish a New version under Deploy → Manage deployments.
+function authorize() {
+  var cal = CalendarApp.getDefaultCalendar();
+  GmailApp.getInboxUnreadCount();
+  console.log('Authorised. Default calendar: ' + cal.getName() + '; "' + CALENDAR_NAME + '" calendars found: ' + CalendarApp.getCalendarsByName(CALENDAR_NAME).length);
+}
+
 function out_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
