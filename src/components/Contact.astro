@@ -45,7 +45,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFnVJ
           <legend>When should we call?</legend>
           <div class="when__row">
           <div class="field">
-            <label for="dt">Preferred date</label>
+            <label for="dt">Preferred date <span class="req" aria-hidden="true">*</span></label>
             <input id="dt" name="preferred_date" type="date" required />
           </div>
           <div class="field">
@@ -72,7 +72,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFnVJ
 
         <div class="consent">
           <input id="ok" name="consent" type="checkbox" value="yes" required />
-          <label for="ok">Vectr may contact me about this enquiry. See our <a href="/privacy">Privacy Policy</a>.</label>
+          <label for="ok"><span class="req" aria-hidden="true">*</span> Vectr may contact me about this enquiry. See our <a href="/privacy">Privacy Policy</a>.</label>
         </div>
 
         <div class="cf-turnstile" data-sitekey={turnstileKey} data-theme="light" data-size="flexible" data-appearance="interaction-only"></div>
@@ -81,7 +81,7 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFnVJ
 
         <div class="form__foot">
           <button type="submit" class="btn btn--navy" id="contact-submit" disabled aria-describedby="date-hint">Arrange my call</button>
-          <span class="form__note" id="date-hint">Choose a preferred date to continue.</span>
+          <span class="form__note" id="date-hint">* Choose a preferred date and tick the privacy box to send.</span>
         </div>
       </form>
     </div>
@@ -107,18 +107,29 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFnVJ
   t.setDate(t.getDate() + 1);
   if (dateInput) dateInput.min = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
 
-  // The submit button stays disabled until a valid preferred date is chosen.
+  // The submit button stays disabled until a valid preferred date is chosen and the privacy box is ticked.
   const hint = document.getElementById('date-hint') as HTMLElement | null;
+  const consent = document.getElementById('ok') as HTMLInputElement | null;
   let sending = false;
   const dateIsValid = () => !!dateInput && dateInput.value !== '' && dateInput.value >= dateInput.min;
   const syncSubmit = () => {
     if (!submit) return;
-    const ok = dateIsValid();
-    submit.disabled = sending || !ok;
-    if (hint) hint.textContent = ok ? 'Protected by Cloudflare Turnstile' : 'Choose a preferred date to continue.';
+    const dateOk = dateIsValid();
+    const consentOk = !!consent?.checked;
+    submit.disabled = sending || !dateOk || !consentOk;
+    if (hint) {
+      hint.textContent = dateOk && consentOk
+        ? 'Protected by Cloudflare Turnstile'
+        : !dateOk && !consentOk
+          ? '* Choose a preferred date and tick the privacy box to send.'
+          : !dateOk
+            ? '* Choose a preferred date to send.'
+            : '* Tick the privacy box to send.';
+    }
   };
   dateInput?.addEventListener('input', syncSubmit);
   dateInput?.addEventListener('change', syncSubmit);
+  consent?.addEventListener('change', syncSubmit);
   syncSubmit();
 
   slotButtons.forEach((btn) => {
