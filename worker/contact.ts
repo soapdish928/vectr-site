@@ -121,7 +121,7 @@ export async function handleContact(request: Request, env: Env): Promise<Respons
   const name = `${d.firstName} ${d.lastName}`;
 
   if (!env.MAIL_WEBHOOK_URL || !env.MAIL_WEBHOOK_SECRET) {
-    console.error('MAIL_WEBHOOK_URL / MAIL_WEBHOOK_SECRET not set');
+    console.error('Mail relay not configured:', { MAIL_WEBHOOK_URL: !!env.MAIL_WEBHOOK_URL, MAIL_WEBHOOK_SECRET: !!env.MAIL_WEBHOOK_SECRET });
     return json({ ok: false, error: 'Our form is temporarily unavailable.' }, 500);
   }
 
