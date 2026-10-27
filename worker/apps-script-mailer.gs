@@ -36,6 +36,7 @@ function doPost(e) {
     GmailApp.sendEmail(String(body.to), String(body.subject), String(body.text), options);
     if (INBOX_FOR.indexOf(String(body.to).toLowerCase()) !== -1) surfaceInInbox_(String(body.to), String(body.subject));
     if (body.event) addCalendarEvent_(body.event);
+    else console.log('No calendar event in this request (Worker may not be on the latest version).');
     return out_({ ok: true });
   } catch (err) {
     return out_({ ok: false, error: String(err) });
@@ -60,6 +61,7 @@ function surfaceInInbox_(to, subject) {
     }
   } catch (err) {
     // Never fail the request just because tidying the inbox didn't work.
+    console.error('Inbox tidy failed: ' + err);
   }
 }
 
@@ -74,8 +76,10 @@ function addCalendarEvent_(ev) {
     var cal = cals.length ? cals[0] : CalendarApp.getDefaultCalendar();
     var event = cal.createEvent(String(ev.title).slice(0, 200), start, end, { description: String(ev.description).slice(0, 4000) });
     event.addPopupReminder(REMINDER_MINUTES);
+    console.log('Calendar event created on "' + cal.getName() + '": ' + ev.title + ' ' + start);
   } catch (err) {
-    // ignore
+    // Shown under Executions → Logs in Apps Script.
+    console.error('Calendar event failed: ' + err);
   }
 }
 
