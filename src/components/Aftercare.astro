@@ -1,5 +1,8 @@
 ---
 import { site, brands } from '../data/site';
+
+const logos = import.meta.glob<{ default: ImageMetadata }>('../assets/brands/*.png', { eager: true });
+const logoFor = (name?: string) => (name ? logos[`../assets/brands/${name}.png`]?.default : undefined);
 // Repeat the brand list so the marquee loops seamlessly (translateX -50%).
 const loop = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 ---
@@ -49,9 +52,20 @@ const loop = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
   <div class="container">
     <div class="brands brands--light">
       <div class="brands__label"><span class="eyebrow">Built on technology we trust</span><span aria-hidden="true"></span></div>
-      <div class="marquee" role="img" aria-label={`Technology we use: ${brands.join(', ')}`}>
+      <div class="marquee" role="img" aria-label={`Technology we use: ${brands.map((b) => b.name).join(', ')}`}>
         <div class="marquee__track" aria-hidden="true">
-          {loop.map((b) => <span class="marquee__item">{b}</span>)}
+          {loop.map((b) => {
+            const img = logoFor(b.logo);
+            return (
+              <span class="marquee__item">
+                {img ? (
+                  <img class="marquee__logo" src={img.src} width={img.width} height={img.height} style={`height:${b.height ?? 36}px`} alt="" loading="lazy" decoding="async" />
+                ) : (
+                  b.name
+                )}
+              </span>
+            );
+          })}
         </div>
       </div>
     </div>
