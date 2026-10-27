@@ -59,7 +59,9 @@ async function verifyTurnstile(token: string, secret: string, ip: string | null)
   return out.success === true;
 }
 
-async function sendEmail(env: Env, mail: { to: string; replyTo: string; subject: string; text: string; html?: string }) {
+type CalendarEvent = { title: string; date: string; slot: string; description: string };
+
+async function sendEmail(env: Env, mail: { to: string; replyTo: string; subject: string; text: string; html?: string; event?: CalendarEvent }) {
   // Apps Script answers a POST with a redirect to the result; fetch follows it.
   const res = await fetch(env.MAIL_WEBHOOK_URL, {
     method: 'POST',
@@ -148,6 +150,8 @@ export async function handleContact(request: Request, env: Env): Promise<Respons
       subject: `Call request: ${name} — ${ukLongDate(d.date)}, ${slot.toLowerCase()}`,
       text,
       html,
+      // The script adds this to your Google Calendar (see worker/apps-script-mailer.gs).
+      event: { title: `Call: ${name} — ${d.phone}`, date: d.date, slot: d.slot, description: text },
     });
 
     if (env.SEND_CONFIRMATION === 'true') {
