@@ -4,7 +4,7 @@
 export const site = {
   name: 'Vectr',
   url: 'https://www.vectr.uk',
-  title: 'Vectr | Networks, Security & AV Systems — Berkshire, Hampshire, Oxfordshire & Wiltshire',
+  title: 'Vectr | Networks, AV, Security',
   description:
     'Integrated networking, Wi-Fi, CCTV, alarms and audio-visual (AV) systems for homes and workplaces across Berkshire, Hampshire, Oxfordshire and Wiltshire. Designed, installed and supported.',
   tagline: 'Making technology simple.',
