@@ -28,10 +28,10 @@ const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '0x4AAAAAAFnVJ
 
       <form class="form" id="contact-form" action="/api/contact" method="post" novalidate>
         <div class="form__grid">
-          <div class="field"><label for="fn">First name</label><input id="fn" name="first_name" required autocomplete="given-name" maxlength="80" /></div>
-          <div class="field"><label for="ln">Last name</label><input id="ln" name="last_name" required autocomplete="family-name" maxlength="80" /></div>
-          <div class="field"><label for="em">Email</label><input id="em" name="email" type="email" required autocomplete="email" maxlength="160" /></div>
-          <div class="field"><label for="ph">Phone</label><input id="ph" name="phone" type="tel" required autocomplete="tel" maxlength="40" /></div>
+          <div class="field"><label for="fn">First name <span class="req" aria-hidden="true">*</span></label><input id="fn" name="first_name" required autocomplete="given-name" maxlength="80" /></div>
+          <div class="field"><label for="ln">Last name <span class="req" aria-hidden="true">*</span></label><input id="ln" name="last_name" required autocomplete="family-name" maxlength="80" /></div>
+          <div class="field"><label for="em">Email <span class="req" aria-hidden="true">*</span></label><input id="em" name="email" type="email" required autocomplete="email" maxlength="160" /></div>
+          <div class="field"><label for="ph">Phone <span class="req" aria-hidden="true">*</span></label><input id="ph" name="phone" type="tel" required autocomplete="tel" maxlength="40" /></div>
           <div class="field"><label for="pc">Postcode</label><input id="pc" name="postcode" autocomplete="postal-code" maxlength="12" /></div>
           <div class="field">
             <label for="sv">I'm interested in</label>
