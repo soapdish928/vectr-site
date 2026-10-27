@@ -359,15 +359,13 @@ a:hover { color: var(--navy-deep); }
 .care-card__title--sm { font-size: 26px; }
 .notes { margin-top: 32px; padding-top: 24px; }
 
-/* Reviews (now also carries the equipment brands) */
+/* Reviews */
 .reviews { gap: 32px; }
 .review-featured { gap: 18px; }
 .review-featured blockquote { font-size: clamp(28px, 3vw, 44px); }
 .review { padding: 24px 28px; gap: 12px; }
-.brands--navy { margin-top: 8px; width: 100%; gap: 12px; text-align: left; }
-.brands--navy .eyebrow { color: var(--accent); }
-.brands--navy .brands__label span:last-child { background: var(--navy-line); }
-.brands--navy .marquee__item { color: #7F8FAA; font-size: 24px; line-height: 56px; }
+.brands--light { margin-top: 24px; width: 100%; gap: 12px; text-align: left; }
+.brands--light .marquee__item { font-size: 24px; line-height: 56px; }
 
 /* Contact */
 .contact__h { font-size: clamp(52px, 5.5vw, 84px); }

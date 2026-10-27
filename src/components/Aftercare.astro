@@ -1,5 +1,7 @@
 ---
-import { site } from '../data/site';
+import { site, brands } from '../data/site';
+// Repeat the brand list so the marquee loops seamlessly (translateX -50%).
+const loop = [...brands, ...brands, ...brands, ...brands, ...brands, ...brands];
 ---
 <section id="aftercare" class="section section--alt">
   <div class="container stack" style="gap: 64px">
@@ -40,6 +42,17 @@ import { site } from '../data/site';
       <div>
         <h3 class="lead-engineer__title">Senior expertise on every project</h3>
         <p class="note__text" style="font-size: 16px">Every system is designed and overseen by a senior project engineer with over 30 years’ experience.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="brands brands--light">
+      <div class="brands__label"><span class="eyebrow">Built on technology we trust</span><span aria-hidden="true"></span></div>
+      <div class="marquee" role="img" aria-label={`Technology we use: ${brands.join(', ')}`}>
+        <div class="marquee__track" aria-hidden="true">
+          {loop.map((b) => <span class="marquee__item">{b}</span>)}
+        </div>
       </div>
     </div>
   </div>
