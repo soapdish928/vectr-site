@@ -39,10 +39,10 @@ export const steps = [
 // `height` is the display height in px, tuned so every logo carries a similar visual width.
 // A brand without a logo file falls back to grey text.
 export const brands: { name: string; logo?: string; height?: number }[] = [
-  { name: 'Ajax', logo: 'ajax', height: 30 },
-  { name: 'Dahua', logo: 'dahua', height: 44 },
-  { name: 'Sonos', logo: 'sonos', height: 28 },
-  { name: 'Ubiquiti UniFi', logo: 'ubiquiti', height: 35 },
+  { name: 'Ajax', logo: 'ajax', height: 22 },
+  { name: 'Dahua', logo: 'dahua', height: 33 },
+  { name: 'Sonos', logo: 'sonos', height: 21 },
+  { name: 'Ubiquiti UniFi', logo: 'ubiquiti', height: 26 },
 ];
 
 export const interests = [
